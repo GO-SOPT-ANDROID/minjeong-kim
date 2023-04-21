@@ -16,4 +16,13 @@
     <string name="wrSpec">특기를 입력하세요.</string>
     <string name="pfName">이름:</string>
     <string name="pfSpec">특기:</string>
+    <string name="tv_gallery">gallery</string>
+    <string name="tv_search">search</string>
+    <string name="iv_description">image of github_repo</string>
+    <string name="tv_repo_title">Emjay Repositories</string>
+    <string name="tv_repo_name">Repo Name</string>
+    <string name="tv_repo_author">Emjay Kim</string>
+    <string name="item_home">홈</string>
+    <string name="item_search">검색</string>
+    <string name="item_photo">갤러리</string>
 </resources>
