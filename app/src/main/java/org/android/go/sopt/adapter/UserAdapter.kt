@@ -19,7 +19,7 @@ class UserAdapter(context: Context) : ListAdapter<ResponseUserDTO.UserData, Recy
         fun onBind(data: ResponseUserDTO.UserData) {
             with(binding) {
                 imgUser.load(data.avatar)
-                tvUserName.text = data.last_name
+                tvUserName.text = data.first_name
                 tvUserEmail.text = data.email
             }
         }

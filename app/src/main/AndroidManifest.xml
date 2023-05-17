@@ -23,10 +23,6 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            android:exported="false"/>
-        <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             android:exported="false"/>
