@@ -21,7 +21,7 @@ import retrofit2.Response
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding
-        get() = requireNotNull(_binding) { "앗! binding이 NUll이 아니다"}
+        get() = requireNotNull(_binding) { "앗! binding이 NUll이 아니다" }
 
     private val viewModel by viewModels<HomeViewModel>()
     private val usersListService = UserServicePool.userService
@@ -49,7 +49,7 @@ class HomeFragment : Fragment() {
     private fun makeUserList() {
 
         usersListService.getUser().enqueue(
-            object: retrofit2.Callback<ResponseUserDTO> {
+            object : retrofit2.Callback<ResponseUserDTO> {
                 override fun onResponse(
                     call: Call<ResponseUserDTO>,
                     response: Response<ResponseUserDTO>
@@ -71,7 +71,7 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private fun makeAdapter(userList: List<ResponseUserDTO.UserData> ) {
+    private fun makeAdapter(userList: List<ResponseUserDTO.UserData>) {
         val titleAdapter = TitleAdapter(requireContext())
         val userViewAdapter = UserAdapter(requireContext())
         titleAdapter.setList(viewModel.mockTitleList)

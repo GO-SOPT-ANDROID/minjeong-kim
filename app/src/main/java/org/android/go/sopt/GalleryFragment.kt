@@ -12,7 +12,7 @@ import org.android.go.sopt.databinding.FragmentGalleryBinding
 class GalleryFragment : Fragment() {
     private var _binding: FragmentGalleryBinding? = null
     private val binding: FragmentGalleryBinding
-        get() = requireNotNull(_binding) { "앗! binding이 NUll이 아니다"}
+        get() = requireNotNull(_binding) { "앗! binding이 NUll이 아니다" }
 
     override fun onCreateView(
         inflater: LayoutInflater,
