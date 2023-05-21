@@ -8,15 +8,23 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.material.snackbar.Snackbar
+import org.android.go.sopt.data.remote.ServicePool.logInService
+import org.android.go.sopt.data.remote.model.RequestLogInDto
+import org.android.go.sopt.data.remote.model.RequestSignUpDto
+import org.android.go.sopt.data.remote.model.ResponseLogInDto
+import org.android.go.sopt.data.remote.model.ResponseSignUpDto
 import org.android.go.sopt.databinding.ActivityMainBinding
+import retrofit2.Call
+import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
-    private var textId: String ?= null
-    private var textPw: String ?= null
-    private var textName: String ?= null
-    private var textSpec: String ?= null
+    //private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    //private var textId: String ?= null
+    //private var textPw: String ?= null
+    //private var textName: String ?= null
+    //private var textSpec: String ?= null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,12 +34,11 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.btSi.setOnClickListener {
-            intent = Intent(this, SignUpActivity::class.java)
-            resultLauncher.launch(intent)
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
         }
 
-        signUp()
-        login()
+        clickLogInBtn()
     }
 
     // 배경 터치 시 키보드 내림
@@ -42,39 +49,49 @@ class MainActivity : AppCompatActivity() {
         return super.dispatchTouchEvent(ev)
     }
 
-    // SignUpActivity에서 돌아올 때 결과 값을 받음
-    private fun signUp() {
-        resultLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                textId = result.data?.getStringExtra("ID")
-                textPw = result.data?.getStringExtra("PW")
-                textName = result.data?.getStringExtra("NAME")
-                textSpec = result.data?.getStringExtra("SPEC")
-            }
+    private fun clickLogInBtn() {
+        binding.btLog.setOnClickListener(){
+            completeLogIn()
         }
     }
 
-    // 저장된 id,pw와 비교
-    private fun login() {
-        with(binding) {
-            btLog.setOnClickListener {
-                if ((textId.equals(etId.text.toString())) && (textPw.equals(etPw.text.toString()))) {
-                    Toast.makeText(
-                        this@MainActivity,
-                        "로그인에 성공했습니다",
-                        Toast.LENGTH_SHORT
-                    ).show()
 
-                    intent = Intent(this@MainActivity, ProfileActivity::class.java)
-                    intent.putExtra("NAME", textName)
-                    intent.putExtra("SPEC", textSpec)
+    //intent = Intent(this@MainActivity, HomeActivity::class.java)
+    //startActivity(intent)
 
-                    setResult(RESULT_OK, intent)
+
+    private fun completeLogIn() {
+        logInService.logIn(
+            with(binding) {
+                RequestLogInDto(
+                    etId.text.toString(),
+                    etPw.text.toString(),
+                )
+            }
+        ).enqueue(object : retrofit2.Callback<ResponseLogInDto> {
+            override fun onResponse(
+                call: Call<ResponseLogInDto>,
+                response: Response<ResponseLogInDto>,
+            ) {
+                if (response.isSuccessful) {
+                    response.body()?.message?.let {
+                        Snackbar.make(binding.root, "로그인에 성공했습니다.", Snackbar.LENGTH_SHORT).show() }
+
+                    intent = Intent(this@MainActivity, HomeActivity::class.java)
                     startActivity(intent)
+
+                    if (!isFinishing) finish()
+                } else {
+                    // 실패한 응답
+                    response.body()?.message?.let { Snackbar.make(binding.root, "서버통신 실패(40 x)", Snackbar.LENGTH_SHORT).show() }
                 }
             }
-        }
-        setContentView(R.layout.activity_main)
+
+            override fun onFailure(call: Call<ResponseLogInDto>, t: Throwable) {
+                // 왜 안 오노
+                t.printStackTrace()
+                Snackbar.make(binding.root, "서버통신 실패(응답값 x)", Snackbar.LENGTH_SHORT).show()
+            }
+        })
     }
 }
