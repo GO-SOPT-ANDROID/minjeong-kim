@@ -2,20 +2,17 @@ package org.android.go.sopt
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
-import com.google.android.material.snackbar.Snackbar
-import org.android.go.sopt.data.remote.ServicePool
-import org.android.go.sopt.data.remote.model.RequestSignUpDto
-import org.android.go.sopt.data.remote.model.ResponseSignUpDto
+import androidx.activity.viewModels
 import org.android.go.sopt.databinding.ActivitySignUpBinding
-import retrofit2.Call
-import retrofit2.Response
 
 
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
-
+    private val viewModel: SignUpViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,70 +20,87 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
+
+        binding.textlayoutId.editText?.addTextChangedListener(idListener)
+        binding.textlayoutPw.editText?.addTextChangedListener(pwListener)
+
+
+        binding.btFsu.isEnabled = false
+
+
+        canClickBtn()
         clickSignUpBtn()
+
     }
 
-    // 배경 터치 시 키보드 내리기
+    private val idListener = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(s: Editable?) {
+            if (s != null) {
+                when {
+                    !viewModel.validID(s.toString()) -> {
+                        binding.textlayoutId.error = "아이디는 영문, 숫자 포함 6~10글자"
+                    }
+                    else -> {
+                        binding.textlayoutId.error = null
+                    }
+                }
+            }
+        }
+    }
+
+    private val pwListener = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+        override fun afterTextChanged(s: Editable?) {
+            if (s != null) {
+                when {
+                    !viewModel.validPW(s.toString()) -> {
+                        binding.textlayoutPw.error = "비밀번호는 영문, 숫자, 특수기호 포함 6~12글자"
+                    }
+                    else -> {
+                        binding.textlayoutPw.error = null
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun canClickBtn() {
+        viewModel.isEnabledBtn.observe(this@SignUpActivity) { isEnabledBtn ->
+            binding.btFsu.isEnabled = viewModel.isValid()
+        }
+    }
+
+
+    private fun clickSignUpBtn() {
+        binding.btFsu.setOnClickListener{
+            viewModel.signUp(
+                binding.etId.text.toString(),
+                binding.etPw.text.toString(),
+                binding.etName.text.toString(),
+                binding.etSpec.text.toString()
+            )
+        }
+        viewModel.signUpResult.observe(this) { signUpResult ->
+            finish()
+        }
+    }
+
+
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         val imm: InputMethodManager =
             getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         return super.dispatchTouchEvent(ev)
-    }
-
-    private fun clickSignUpBtn() {
-        binding.btFsu.setOnClickListener() {
-            if (canSignUp()) {
-                completeSignUp()
-            }
-        }
-    }
-
-    // 조건에 맞으면 값 넘겨줌
-    private fun canSignUp() :Boolean {
-        return binding.etId.text.length in 6..10
-                && binding.etPw.text.length in 8..12
-                && binding.etName.text.isNotBlank()
-                && binding.etSpec.text.isNotBlank()
-
-    }
-
-
-
-    private val signUpService = ServicePool.signUpService
-
-    private fun completeSignUp() {
-        signUpService.signUp(
-            with(binding) {
-                RequestSignUpDto(
-                    etId.text.toString(),
-                    etPw.text.toString(),
-                    etName.text.toString(),
-                    etSpec.text.toString()
-                )
-            }
-        ).enqueue(object : retrofit2.Callback<ResponseSignUpDto> {
-            override fun onResponse(
-                call: Call<ResponseSignUpDto>,
-                response: Response<ResponseSignUpDto>,
-            ) {
-                if (response.isSuccessful) {
-                    response.body()?.message?.let {
-                        Snackbar.make(binding.root, "회원가입에 성공했습니다.", Snackbar.LENGTH_SHORT).show() }
-
-                    if (!isFinishing) finish()
-                } else {
-                    // 실패한 응답
-                    response.body()?.message?.let { Snackbar.make(binding.root, "서버통신 실패(40 x)", Snackbar.LENGTH_SHORT).show() }
-                }
-            }
-
-            override fun onFailure(call: Call<ResponseSignUpDto>, t: Throwable) {
-                // 왜 안 오노
-                //t.message?.let { Snackbar.make(binding.root, "서버통신 실패(응답값 x)", Snackbar.LENGTH_SHORT).show() }
-                t.printStackTrace()
-                Snackbar.make(binding.root, "서버통신 실패(응답값 x)", Snackbar.LENGTH_SHORT).show()
-            }
-        })
     }
 }
