@@ -11,8 +11,8 @@ data class ResponseUserDTO(
     val per_page: Int,
     @SerialName("total")
     val total: Int,
-    @SerialName("total_page")
-    val total_page: Int,
+    @SerialName("total_pages")
+    val total_pages: Int,
     @SerialName("data")
     val data: List<UserData>,
     @SerialName("support")
@@ -39,3 +39,4 @@ data class ResponseUserDTO(
         val text: String
     )
 }
+
