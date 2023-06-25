@@ -10,15 +10,16 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class LogInViewModel :ViewModel() {
-    private val _logInResult : MutableLiveData<ResponseLogInDto>  = MutableLiveData()
+class LogInViewModel : ViewModel() {
+    private val _logInResult: MutableLiveData<ResponseLogInDto> = MutableLiveData()
     val logInResult: LiveData<ResponseLogInDto> = _logInResult
 
     fun logIn(id: String, pw: String) {
         logInService.logIn(
             RequestLogInDto(
-                id, pw
-            )
+                id,
+                pw,
+            ),
         ).enqueue(object : Callback<ResponseLogInDto> {
             override fun onResponse(
                 call: Call<ResponseLogInDto>,
@@ -26,8 +27,7 @@ class LogInViewModel :ViewModel() {
             ) {
                 if (response.isSuccessful) {
                     _logInResult.value = response.body()
-                } else{
-
+                } else {
                 }
             }
 

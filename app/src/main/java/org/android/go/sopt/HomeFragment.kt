@@ -1,16 +1,15 @@
 package org.android.go.sopt
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.android.go.sopt.adapter.UserAdapter
 import org.android.go.sopt.data.remote.model.ResponseUserDTO
 import org.android.go.sopt.databinding.FragmentHomeBinding
-
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
@@ -36,9 +35,7 @@ class HomeFragment : Fragment() {
 
         viewModel.makeList()
         makeUserList()
-
     }
-
 
     private fun makeUserList() {
         viewModel.userResult.observe(viewLifecycleOwner) { response ->
@@ -60,6 +57,4 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
 }

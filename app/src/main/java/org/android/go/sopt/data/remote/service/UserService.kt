@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface UserService {
     @GET("/api/users")
-    fun getUser(
+    suspend fun getUser(
         @Query("page") num: Int = 2
-    ): Call<ResponseUserDTO>
+    ): ResponseUserDTO
 }
