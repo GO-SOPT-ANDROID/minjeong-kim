@@ -13,4 +13,7 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <style name="TextLable" parent="TextAppearance.Design.Hint" >
+        <item name="android:textSize">11dp</item>
+    </style>
 </resources>
