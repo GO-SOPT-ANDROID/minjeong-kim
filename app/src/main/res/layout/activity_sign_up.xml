@@ -7,14 +7,14 @@
     <data>
         <variable
             name="viewModel"
-            type="org.android.go.sopt.SignUpViewModel" />
+            type="org.android.go.sopt.feature.signup.SignUpViewModel" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".SignUpActivity">
+        tools:context=".feature.signup.SignUpActivity">
 
         <TextView
             android:id="@+id/tv_SignUp"
