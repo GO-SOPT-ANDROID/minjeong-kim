@@ -6,17 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import org.android.go.sopt.feature.adapter.UserAdapter
 import org.android.go.sopt.data.datasource.model.ResponseUserDTO
 import org.android.go.sopt.databinding.FragmentHomeBinding
+import org.android.go.sopt.feature.adapter.UserAdapter
+import org.android.go.sopt.util.ViewModelFactory
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding: FragmentHomeBinding
         get() = requireNotNull(_binding) { "앗! binding이 NUll이 아니다" }
 
-    private val viewModel by viewModels<HomeViewModel>()
+    private val viewModel: HomeViewModel by viewModels { ViewModelFactory(requireContext()) }
 
     // 뷰 생성
     override fun onCreateView(
@@ -33,13 +33,15 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         // 대부분의 로직을 여기에 구현
 
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
         viewModel.makeList()
         makeUserList()
     }
 
     private fun makeUserList() {
         viewModel.userResult.observe(viewLifecycleOwner) { response ->
-            response.data?.let { userList ->
+            response.data.let { userList ->
                 makeAdapter(userList)
             }
         }
@@ -50,7 +52,6 @@ class HomeFragment : Fragment() {
         userViewAdapter.submitList(userList)
 
         binding.rvHome.adapter = userViewAdapter
-        binding.rvHome.layoutManager = LinearLayoutManager(requireContext())
     }
 
     override fun onDestroyView() {
