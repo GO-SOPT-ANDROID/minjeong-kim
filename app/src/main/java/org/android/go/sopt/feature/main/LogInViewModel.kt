@@ -17,36 +17,11 @@ class LogInViewModel(private val logInRepository: LogInRepository) : ViewModel()
     val id = MutableLiveData<String>()
     val pw = MutableLiveData<String>()
 
-//    fun logIn(id: String, pw: String) {
-//        logInService.logIn(
-//            RequestLogInDto(
-//                id,
-//                pw,
-//            ),
-//        ).enqueue(object : Callback<ResponseLogInDto> {
-//            override fun onResponse(
-//                call: Call<ResponseLogInDto>,
-//                response: Response<ResponseLogInDto>,
-//            ) {
-//                if (response.isSuccessful) {
-//                    _logInResult.value = response.body()
-//                } else {
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ResponseLogInDto>, t: Throwable) {
-//                t.printStackTrace()
-//            }
-//        })
-//    }
-
     fun doLogIn(id: String, pw: String) {
         viewModelScope.launch {
-            logInRepository.logIn(RequestLogInDto(id, pw)).onSuccess {
-                    response ->
+            logInRepository.logIn(RequestLogInDto(id, pw)).onSuccess { response ->
                 _logInResult.value = response
-            }.onFailure {
-                    error ->
+            }.onFailure { error ->
                 Log.d("LogInView", "LogIn 실패")
             }
         }

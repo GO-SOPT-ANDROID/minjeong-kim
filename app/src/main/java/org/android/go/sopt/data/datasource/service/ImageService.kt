@@ -1,6 +1,5 @@
 package org.android.go.sopt.data.datasource.service
 
-
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Multipart

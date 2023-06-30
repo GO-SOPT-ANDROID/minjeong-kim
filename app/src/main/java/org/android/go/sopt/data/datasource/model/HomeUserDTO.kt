@@ -16,7 +16,7 @@ data class ResponseUserDTO(
     @SerialName("data")
     val data: List<UserData>,
     @SerialName("support")
-    val support: Support
+    val support: Support,
 ) {
     @Serializable
     data class UserData(
@@ -29,14 +29,14 @@ data class ResponseUserDTO(
         @SerialName("last_name")
         val last_name: String,
         @SerialName("avatar")
-        val avatar: String
+        val avatar: String,
     )
+
     @Serializable
-    data class Support (
+    data class Support(
         @SerialName("url")
         val url: String,
         @SerialName("text")
-        val text: String
+        val text: String,
     )
 }
-

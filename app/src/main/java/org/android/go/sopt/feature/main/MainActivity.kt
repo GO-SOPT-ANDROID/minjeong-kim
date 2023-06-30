@@ -7,7 +7,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import org.android.go.sopt.databinding.ActivityMainBinding
-import org.android.go.sopt.databinding.ActivitySignUpBinding
 import org.android.go.sopt.feature.home.HomeActivity
 import org.android.go.sopt.feature.signup.SignUpActivity
 import org.android.go.sopt.util.ViewModelFactory

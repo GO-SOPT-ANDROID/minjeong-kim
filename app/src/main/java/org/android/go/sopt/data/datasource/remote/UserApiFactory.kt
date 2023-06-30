@@ -15,6 +15,7 @@ object UserApiFactory {
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .build()
     }
+
     inline fun <reified T> createUserService(): T = retrofitForUser.create<T>(T::class.java)
 }
 

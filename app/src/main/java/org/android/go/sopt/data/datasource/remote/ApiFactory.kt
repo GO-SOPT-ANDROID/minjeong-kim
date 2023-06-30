@@ -13,11 +13,16 @@ import retrofit2.Retrofit
 
 object ApiFactory {
     private val client by lazy {
-        OkHttpClient.Builder().addInterceptor(AuthInterceptor()).addInterceptor(HttpLoggingInterceptor().apply {
-            level =
-                if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
-                else HttpLoggingInterceptor.Level.NONE
-        }).build()
+        OkHttpClient.Builder().addInterceptor(AuthInterceptor()).addInterceptor(
+            HttpLoggingInterceptor().apply {
+                level =
+                    if (BuildConfig.DEBUG) {
+                        HttpLoggingInterceptor.Level.BODY
+                    } else {
+                        HttpLoggingInterceptor.Level.NONE
+                    }
+            },
+        ).build()
     }
 
     val retrofitForAuth: Retrofit by lazy {
@@ -28,10 +33,7 @@ object ApiFactory {
     }
 
     inline fun <reified T> createAuthService(): T = retrofitForAuth.create<T>(T::class.java)
-
-
 }
-
 
 object ServicePool {
     val signUpService = ApiFactory.createAuthService<SignUpService>()

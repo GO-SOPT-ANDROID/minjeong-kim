@@ -30,7 +30,8 @@ class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewMode
     }
 
     fun isValid(): Boolean {
-        return validID(id.value.orEmpty()) && validPW(pw.value.orEmpty()) && name.value.orEmpty().isNotBlank() && spec.value.orEmpty().isNotBlank()
+        return validID(id.value.orEmpty()) && validPW(pw.value.orEmpty()) && name.value.orEmpty()
+            .isNotBlank() && spec.value.orEmpty().isNotBlank()
     }
 
     val isEnabledBtn = MediatorLiveData<Boolean>().apply {
@@ -42,11 +43,9 @@ class SignUpViewModel(private val signUpRepository: SignUpRepository) : ViewMode
 
     fun doSignUp(id: String, pw: String, name: String, spec: String) {
         viewModelScope.launch {
-            signUpRepository.signUp(RequestSignUpDto(id, pw, name, spec)).onSuccess {
-                    response ->
+            signUpRepository.signUp(RequestSignUpDto(id, pw, name, spec)).onSuccess { response ->
                 _signUpResult.value = response
-            }.onFailure {
-                    error ->
+            }.onFailure { error ->
                 Log.d("SignUpView", "SignUp 실패")
             }
         }
